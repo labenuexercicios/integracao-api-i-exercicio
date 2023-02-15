@@ -56,7 +56,7 @@ export default function Musicas(props) {
         }
 
         axios.post(`https://us-central1-labenu-apis.cloudfunctions.net/labefy/playlists/${props.playlist.id}/tracks`, novamusica,  headers
-        ).then((resposta) =>{
+        ).then(() =>{
             // console.log(resposta.data)
             pegaMusicas()
         }).catch((erro) =>{
@@ -64,27 +64,42 @@ export default function Musicas(props) {
         })
     }
 
-    // const removeMusicas = (id) =>{
-    //     axios.delete(`https://us-central1-labenu-apis.cloudfunctions.net/labefy/playlists/${props.playlist.id}/tracks/${id}`, headers
-    //     ).then((resposta) =>{
-    //         console.log(resposta)
-    //         props.playlist()
-    //     }).catch((erro) =>{
-    //         console.log(erro)
-    //     })
-    // }
 
+
+    const removeMusicas = (id) =>{
+        axios.delete(`https://us-central1-labenu-apis.cloudfunctions.net/labefy/playlists/${props.playlist.id}/tracks/${id}`, headers
+        ).then((resposta) =>{
+            console.log(resposta)
+            pegaMusicas()
+        }).catch((erro) =>{
+            console.log(erro)
+        })
+    }
+
+    const deletarPlaylist = async (id) => {
+        try {
+            await axios.delete(
+            `https://us-central1-labenu-apis.cloudfunctions.net/labefy/playlists/${id}`, headers);
+        //   console.log(response.data.result.playlist)
+            // setPlaylists(response.data.result.playlist)
+            // recebePlaylist(response.data.result.playlist)
+            props.recebePlaylist()
+        } catch (error) {
+          console.log(error.response);
+        }
+      };
 
 
     return (
         <ContainerMusicas>
+            <button onClick={(e) => {deletarPlaylist(props.playlist.id)}}>Deletar</button>
             <h2>{props.playlist.name}</h2>
             {musicas.map((musica) => {
                 return (
                     <Musica key={musica.id}>
                         <h3>{musica.name} - {musica.artist}</h3>
                         <audio src={musica.url} controls />
-                        <button >X</button>
+                        <button onClick={() =>{removeMusicas(musica.id)}}>X</button>
                     </Musica>)
             })}
             <ContainerInputs>
