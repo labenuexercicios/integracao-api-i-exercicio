@@ -7,6 +7,9 @@ import {
   Musica,
 } from "./styled";
 import axios from "axios";
+import { BASE_URL } from "../../Constants/BASE_URL";
+import Playlists from "../Playlists/Playlists";
+import { AUTH_TOKEN } from "../../Constants/AUTH_TOKEN";
 
 // const musicasLocal = [{
 //     artist: "Artista 1",
@@ -37,10 +40,10 @@ export default function Musicas(props) {
   const pegaMusica = () => {
     axios
       .get(
-        `https://us-central1-labenu-apis.cloudfunctions.net/labefy/playlists/${props.playlist.id}/tracks`,
+        `${BASE_URL}/${props.playlist.id}/tracks`,
         {
           headers: {
-            Authorization: "henriquedias-faruqi",
+            Authorization: AUTH_TOKEN,
           },
         }
       )
@@ -64,11 +67,11 @@ export default function Musicas(props) {
     };
     axios
       .post(
-        `https://us-central1-labenu-apis.cloudfunctions.net/labefy/playlists/${props.playlist.id}/tracks`,
+        `${BASE_URL}${props.playlist.id}/tracks`,
         body,
         {
           headers: {
-            Authorization: "henriquedias-faruqi",
+            Authorization: AUTH_TOKEN,
           },
         }
       )
@@ -86,10 +89,10 @@ export default function Musicas(props) {
   const removeMusica = (musicaId) => {
     axios
       .delete(
-        `https://us-central1-labenu-apis.cloudfunctions.net/labefy/playlists/${props.playlist.id}/tracks/${musicaId}`,
+        `${BASE_URL}/${props.playlist.id}/tracks/${musicaId}`,
         {
           headers: {
-            Authorization: "henriquedias-faruqi",
+            Authorization: AUTH_TOKEN,
           },
         }
       )
@@ -101,6 +104,19 @@ export default function Musicas(props) {
         console.log(erro.response.data);
       });
   };
+  const deletarPlaylist = async ()=>{
+    try {
+      await axios.delete(`${BASE_URL}/${props.playlist.id}`,{
+        headers:{
+          Authorization: AUTH_TOKEN
+        }
+      });
+      alert("Playlist Removida")
+      props.pegaPlaylist()
+    } catch (erro) {
+      console.log(erro.data)
+    }
+  }
 
   //   useEffect(() => {
   //     adicionaMusica();
@@ -109,6 +125,7 @@ export default function Musicas(props) {
   return (
     <ContainerMusicas>
       <h2>{props.playlist.name}</h2>
+      <button onClick={deletarPlaylist}>Remover Playlist</button>
       {musicas.map((musica) => {
         return (
           <Musica key={musica.id}>
