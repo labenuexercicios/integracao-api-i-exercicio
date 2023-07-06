@@ -1,35 +1,37 @@
-import React, {  useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { headers } from "../../headers";
+import CriarPlaylist from "../CriarPlaylist/CriarPlaylist";
 import Musicas from "../Musicas/Musicas";
 
-const playlistsLocal = [
-    {
-        id: 1,
-        name: "Playlist 1"
-    },
-    {
-        id: 2,
-        name: "Playlist 2"
-    },
-    {
-        id: 3,
-        name: "Playlist 3"
-    },
-    {
-        id: 4,
-        name: "Playlist 4"
-    },
-]
 function Playlists() {
-    const [playlists, setPlaylists] = useState(playlistsLocal)
-  
-    return (
-        <div>
-            {playlists.map((playlist) => {
-                return <Musicas key={playlist.id} playlist={playlist}/>
-            })}
+  const [playlists, setPlaylists] = useState([]);
 
-        </div>
-    );
+  //   Exercício 2 (o 1 é leitura da documentação)
+  const pegaPlaylists = () => {
+    axios
+      .get(
+        "https://us-central1-labenu-apis.cloudfunctions.net/labefy/playlists",
+        headers
+      )
+      .then((res) => {
+        setPlaylists(res.data.result.list);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+  useEffect(() => {
+    pegaPlaylists();
+  }, []);
+  return (
+    <div>
+      <CriarPlaylist pegaPlaylists={pegaPlaylists} />
+      {playlists.map((playlist) => {
+        return <Musicas key={playlist.id} playlist={playlist} />;
+      })}
+    </div>
+  );
 }
 
 export default Playlists;
