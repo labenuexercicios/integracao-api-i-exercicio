@@ -1,8 +1,14 @@
 import React from "react";
 import Playlists from "./componentes/Playlists/Playlists";
+import { GlobalStyle } from "./GlobalStyle";
 
 function App() {
-  return <Playlists/>
+  return (
+    <>
+      <GlobalStyle />
+      <Playlists />
+    </>
+  );
 }
 
 export default App;

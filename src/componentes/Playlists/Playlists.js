@@ -1,5 +1,6 @@
 import React, {  useState } from "react";
 import Musicas from "../Musicas/Musicas";
+import { ContainerPrincipal } from "./PlaylistStyles";
 
 const playlistsLocal = [
     {
@@ -23,12 +24,12 @@ function Playlists() {
     const [playlists, setPlaylists] = useState(playlistsLocal)
   
     return (
-        <div>
+        <ContainerPrincipal>
             {playlists.map((playlist) => {
                 return <Musicas key={playlist.id} playlist={playlist}/>
             })}
 
-        </div>
+        </ContainerPrincipal>
     );
 }
 
